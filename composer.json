@@ -1,0 +1,29 @@
+{
+    "name": "darrylkuhn/enforce",
+    "description": "Enforce access control restrictions using Eloquent models",
+    "keywords": ["laravel","illuminate","auth","acl","Eloquent ORM"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Darryl Kuhn",
+            "email": "darryl.kuhn@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.0.x",
+        "laravelbook/ardent": "2.1.x"
+    },
+    "require-dev": {
+        "illuminate/database": "4.0.x"
+    },
+    "suggest": {
+        "zizaco/entrust":"Role-based Permissions for Laravel 4"
+    },
+    "autoload": {
+        "psr-0": {
+            "Darrylkuhn\\Enforce": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}

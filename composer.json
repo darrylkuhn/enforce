@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Darrylkuhn\\Enforce": "src/"
+            "darrylkuhn\\enforce": "src/"
         }
     },
     "minimum-stability": "dev"

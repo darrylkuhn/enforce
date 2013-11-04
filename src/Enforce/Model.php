@@ -14,8 +14,6 @@ class Model extends Eloquent\Model
 	 */
 	public static function find($id, $columns = array('*'), $enforceOnRead=null)
 	{
-		$enforceOnRead = $enforceOnRead === null ? \Config::get('enforce.byDefault') : $enforceOnRead;
-
 		$instance = new static;
 		$model = $instance->newQuery()->find($id, $columns);
 
@@ -31,8 +29,6 @@ class Model extends Eloquent\Model
 	 */
 	public static function findOrFail($id, $columns = array('*'), $enforceOnRead=null)
 	{
-		$this->enforceOnRead = $enforceOnRead === null ? \Config::get('enforce.byDefault') : $enforceOnRead;
-
 		if ( ! is_null($model = static::find($id, $columns,$enforceOnRead))) return $model;
 
 		throw new Eloquent\ModelNotFoundException;

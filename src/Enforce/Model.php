@@ -14,6 +14,8 @@ class Model extends Eloquent\Model
 	 */
 	public static function find($id, $columns = array('*'), $enforceOnRead=null)
 	{
+		$enforceOnRead = $enforceOnRead === null ? \Config::get('enforce.byDefault') : $enforceOnRead;
+
 		$instance = new static;
 		$model = $instance->newQuery()->find($id, $columns);
 
@@ -29,6 +31,8 @@ class Model extends Eloquent\Model
 	 */
 	public static function findOrFail($id, $columns = array('*'), $enforceOnRead=null)
 	{
+		$enforceOnRead = $enforceOnRead === null ? \Config::get('enforce.byDefault') : $enforceOnRead;
+
 		if ( ! is_null($model = static::find($id, $columns,$enforceOnRead))) return $model;
 
 		throw new Eloquent\ModelNotFoundException;
@@ -72,8 +76,7 @@ class Model extends Eloquent\Model
 	 * the $key might be. Do you hate eval()? Great send me the solution and 
 	 * we'll change the world together!
 	 * 
-	 * @param $models either Illuminate\Database\Eloquent\Collection or 
-	 *        Illuminate\Database\Eloquent\Model or subclass
+	 * @param $models either Illuminate\Database\Eloquent\Model|Collection or subclass
 	 * @param string $key bit of data on the model to filter against
 	 * @param mixed $referenceValue value to filter model(s) against
 	 * @return mixed

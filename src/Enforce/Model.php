@@ -1,20 +1,21 @@
 <?php namespace Enforce;
 
+use \Exception;
 use \Illuminate\Database\Eloquent;
 
 class Model extends Eloquent\Model
 {
 	/**
-	 * Find a model by its primary key. This is and should be an exacty copy of 
-	 * the same method defined in \Illuminate\Database\Eloquent\Model (I don't 
-	 * call parent:: because so doing ran me into infinate loops).
+	 * Find a model by its primary key.
 	 *
 	 * @param  mixed  $id
 	 * @param  array  $columns
-	 * @return \Enforce\Model
+	 * @return \Illuminate\Database\Eloquent\Model|Collection|static
 	 */
-	public static function find($id, $columns = array('*'), $enforceOnRead=true)
+	public static function find($id, $columns = array('*'), $enforceOnRead=null)
 	{
+		$enforceOnRead = $enforceOnRead === null ? \Config::get('enforce.byDefault') : $enforceOnRead;
+
 		$instance = new static;
 		$model = $instance->newQuery()->find($id, $columns);
 
@@ -22,30 +23,26 @@ class Model extends Eloquent\Model
 	}
 
 	/**
-	 * Find a model by its primary key or throw an exception. This is and should 
-	 * be an exacty copy of the same method defined in 
-	 * \Illuminate\Database\Eloquent\Model (I don't call parent:: because so
-	 * doing ran me into infinate loops).
+	 * Find a model by its primary key or throw an exception.
 	 *
 	 * @param  mixed  $id
 	 * @param  array  $columns
-	 * @return \Enforce\Model
+	 * @return \Illuminate\Database\Eloquent\Model|Collection|static
 	 */
-	public static function findOrFail($id, $columns = array('*'), $enforceOnRead=true)
+	public static function findOrFail($id, $columns = array('*'), $enforceOnRead=null)
 	{
+		$this->enforceOnRead = $enforceOnRead === null ? \Config::get('enforce.byDefault') : $enforceOnRead;
+
 		if ( ! is_null($model = static::find($id, $columns,$enforceOnRead))) return $model;
 
 		throw new Eloquent\ModelNotFoundException;
 	}
 
 	/**
-	 * Get a new query builder for the model's table. This is and should be an 
-	 * exacty copy of the same method defined in 
-	 * \Illuminate\Database\Eloquent\Builder (I don't call on parent:: because I 
-	 * needed the Builder returned to be an Enforce\Builder.
+	 * Get a new query builder for the model's table.
 	 *
 	 * @param  bool  $excludeDeleted
-	 * @return \Enforce\Builder|static
+	 * @return \Illuminate\Database\Eloquent\Builder|static
 	 */
 	public function newQuery($excludeDeleted = true)
 	{
@@ -84,7 +81,7 @@ class Model extends Eloquent\Model
 	 * @param string $key bit of data on the model to filter against
 	 * @param mixed $referenceValue value to filter model(s) against
 	 * @return mixed
-	 * @throws \Enforce\Exception
+	 * @throws EnforceException
 	 */
 	protected static function enforceFilter($models, $key, $refrenceValue)
 	{
@@ -104,7 +101,7 @@ class Model extends Eloquent\Model
         }
         else 
         {
-        	throw new Exception('Enforce can only filter Eloquent Models or Collections, '.get_class($models).' given.');
+        	throw new EnforceException('Enforce can only filter Eloquent Models or Collections, '.get_class($models).' given.');
         }
     }
 

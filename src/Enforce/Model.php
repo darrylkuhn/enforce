@@ -71,7 +71,7 @@ class Model extends Eloquent\Model
 	 * and honestly I cannot think of a use case where this could possibly make 
 	 * sense - but if you did do that then for the love of all that is not evil
 	 * make sure to sanitize the input. I have no hate for eval(), it's in the 
-	 * language for a reason. I do have pointless use of it though, but I just 
+	 * language for a reason. I do hate *pointless* use of it, but I just 
 	 * couldn't think of a clean way to handle all the different cases of what 
 	 * the $key might be. Do you hate eval()? Great send me the solution and 
 	 * we'll change the world together!

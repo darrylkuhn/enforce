@@ -44,8 +44,8 @@ Of course you can set this to true if you'd like but read throught he entire qui
 Your models should continue to extend Eloquent. Behind the scenes they're really extending Enforce\Model which in turn extends \Illuminate\Database\Eloquent\Model.
 
 Your models now inherit a few new static methods including enforceOnRead() and enforceFilter(). 
- - enforceOnRead() takes a single parameter, either a Model or Collection. By default enforceOnRead() does nothing, its simply a passthru returning the model or collection it was given, this is where you can add your custom enforcement rules. 
- - enforceFilter() takes a Model or Collection and filters out any model if the $key (member variable) does not match the $reference value.
+ - ```enforceOnRead()``` takes a single parameter, either a Model or Collection. By default ```enforceOnRead()``` does nothing, its simply a passthru returning the model or collection it was given, this is where you can add your custom enforcement rules. 
+ - ```enforceFilter()``` takes a Model or Collection and filters out any model if the $key (member variable) does not match the $reference value.
 For example imagine you wanted to make sure the currently authenticated user could only access their own user model. You could implement such a restriction with the following code:
 
 ```php
@@ -70,7 +70,7 @@ class User extends Eloquent
     }
 }
 ```
-This filters out any models who's id doesn't match the id of the currently authenticated user. Now calls to ```php User::find($id); ``` will return filtered results. To be a little more useful let's say you wanted to allow "admins" to access all models - you could implement the following:
+This filters out any models who's id doesn't match the id of the currently authenticated user. Now calls to ```User::find($id);``` will return filtered results. To be a little more useful let's say you wanted to allow "admins" to access all models - you could implement the following:
 
 ```php
 <?php
@@ -101,12 +101,12 @@ class User extends Eloquent
 }
 ```
 
-enforceFilter() can accpet complex keys (e.g. setting $key = 'primaryCompany()->locations[0]->id' will evaluate $model->primaryCompany()->locations[0]->id correctly)
+enforceFilter() can accpet complex keys (e.g. ```$key = 'primaryCompany()->locations[0]->id';``` evaluates just fine.)
 
-If necessary You may bypass enforcement by explicitly setting enforcement to false in the call ```php User::find($id, ['*'], false);```
+If necessary You may bypass enforcement by explicitly setting enforcement to false in the call ```User::find($id, ['*'], false);```
 
 ### Startup
-In some cases it's adventageous to leave enforcement off until your app has reached some state. In the example above if enforcement is on and we do not explicity set enforcement to false in our User::find() call authentication will fail. This is because the rule requires a valid authenticated user to access user models and the authentication system uses the user model to authenticate - chicken meet egg. There are several ways to solve for this; you can of course flag calls in the authentication subsystem but this requires hacking the Laravel core (so it's not recommended). Assuming you're using a filter to authenticate a user prior to routing my recommendation is to initialize the app with the config option ```php enforce.byDefault = false``` and then add a filter which flips it to true once the authentication is complete. For example in add the following filter to filters.php 
+In some cases it's adventageous to leave enforcement off until your app has reached some state. In the example above if enforcement is on and we do not explicity set enforcement to false when calling ```User::find()```the authentication process will fail. This is because the rule requires a valid authenticated user to access user models and the authentication system uses the user model to authenticate - chicken meet egg. There are several ways to solve for this; you can of course flag calls in the authentication subsystem but this may require hacking the Laravel core (which is not recommended). Assuming you're using a filter to authenticate a user prior to routing my recommendation is to initialize the app with the enforcement off (```byDefault => false```) and then add a filter which flips it to true once the authentication is complete. For example in add the following filter to filters.php 
 
 ```php
 Route::filter('app.applyEnforce', function()
@@ -125,3 +125,4 @@ Route::group(array('before' => array('auth.basic', 'app.applyEnforce') ), functi
     Route::resource('users/{id}/roles', 'UserRoleController', ['only' => ['index', 'store', 'delete', 'describe']]);
 });
 ```
+This will first authenticate the user and then turn enforcement on.

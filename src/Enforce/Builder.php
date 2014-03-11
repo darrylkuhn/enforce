@@ -1,6 +1,7 @@
 <?php namespace Enforce;
 
 use \Illuminate\Database\Eloquent;
+use \Eloquent\ModelNotFoundException;
 
 class Builder extends Eloquent\Builder
 {
@@ -69,7 +70,7 @@ class Builder extends Eloquent\Builder
 
         if ( ! is_null($model = $this->find($id, $columns, $enforceOnRead))) return $model;
 
-        throw new Eloquent\ModelNotFoundException;
+        throw new ModelNotFoundException;
     }
 
     /**

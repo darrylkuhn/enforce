@@ -1,7 +1,6 @@
 <?php namespace Enforce;
 
-use \Exception;
-use \Illuminate\Database\Eloquent;
+use \Exception, \Illuminate\Database\Eloquent, \Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Model extends Eloquent\Model
 {

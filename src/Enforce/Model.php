@@ -38,29 +38,6 @@ class Model extends Eloquent\Model
     }
 
     /**
-     * Get a new query builder for the model's table.
-     *
-     * @param  bool  $excludeDeleted
-     * @return \Illuminate\Database\Eloquent\Builder|static
-     */
-    public function newQuery($excludeDeleted = true)
-    {
-        $builder = new Builder($this->newBaseQueryBuilder());
-
-        // Once we have the query builders, we will set the model instances so the
-        // builder can easily access any information it may need from the model
-        // while it is constructing and executing various queries against it.
-        $builder->setModel($this)->with($this->with);
-
-        if ($excludeDeleted and $this->softDelete)
-        {
-            $builder->whereNull($this->getQualifiedDeletedAtColumn());
-        }
-
-        return $builder;
-    }
-
-    /**
      * Filter out any models supplied in which the key (set on the model) does 
      * not match the reference value provided. Yes - this function makes use of
      * eval... yes I have heard eval is EVIL. This method must be able to reach 
